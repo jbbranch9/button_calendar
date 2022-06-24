@@ -1,4 +1,4 @@
-# button_calendar
+# ButtonCalendar
 a PySimpleGUI calendar widget
 
 # OVERVIEW:
@@ -17,15 +17,15 @@ WeekButtons on the side can toggle all DateButtons in its same row.
 
 ButtonCalendar either can be:
 
-    instantiated as a standalone window by calling 
+    (A) instantiated as a standalone window by calling 
         ButtonCalendar().window()
     
     -OR- 
 
-    used an element within an existing PySimpleGUI window by assigning 
+    (B) used an element within an existing PySimpleGUI window by assigning 
         button_calendar_object = ButtonCalendar().get_frame()
-    and adding button_calendar_object to the window's layout
-        *NOTE: You must call post_finalize() AFTER the window is read or finalized, and/or BEFORE the window's event loop to enable full functionality
+        and adding button_calendar_object to the window's layout
+        *NOTE: You must call post_finalize() AFTER the window is read or finalized, and/or BEFORE the window's event loop to enable full functionality.
     
 # CONTROLS:
 
