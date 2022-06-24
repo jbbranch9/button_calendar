@@ -15,21 +15,21 @@ WeekButtons on the side can toggle all DateButtons in its same row.
 
 # APPLICATION:
 
-ButtonCalendar either can be:
+ButtonCalendar has two modes, (A) self-windowed and (B) framed:
 
-    (A) instantiated as a standalone window by calling 
+    (A) instantiate as a standalone window by calling 
         ButtonCalendar().window()
     
     -OR- 
 
-    (B) used an element within an existing PySimpleGUI window by assigning 
+    (B) use an element within an existing PySimpleGUI window by assigning 
         button_calendar_object = ButtonCalendar().get_frame()
         and adding button_calendar_object to the window's layout
         *NOTE: You must call post_finalize() AFTER the window is read or finalized, and/or BEFORE the window's event loop to enable full functionality.
     
 # CONTROLS:
 
-at all times:
+while mouse is hovering over calendar:
     
     mouse_wheel:
         change month
@@ -51,3 +51,8 @@ while in 'range selection mode':
     ctrl-right-click OR
     shift-right-click:
         de-select all highlighted dates up to and including clicked date, exit 'range selection mode'
+        
+while in self-windowed mode:
+    
+    ctrl-P:
+        print selected dates array
