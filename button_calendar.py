@@ -45,8 +45,11 @@ class ButtonCalendar:
             "label_small": ("consolas", 11),
             "calendar_button": ("consolas bold", 16),
         }
-        return fonts[style]
-
+        if style:
+            return fonts[style]
+        else:
+            return fonts
+        
     def get_palette():
         
         black = "#FFFFFF"
