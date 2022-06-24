@@ -7,9 +7,9 @@ Each calendar screen spans 6 weeks, centered around the relevant month and year.
 
 Multiple dates can be toggled. A tuple of toggled dates can be called/printed at any time. (see "SELECTED DATES")
 
-DateButtons change color when toggled, and also add or remove their date string to the calendar's 'selected_dates' array.
+DateButtons change color when toggled, and also add or remove their date string to the selected dates array.
 
-WeekButtons on the side can toggle all DateButtons in its same row.
+WeekButtons on the side toggle all DateButtons in the same row.
 
 # APPLICATION:
 
@@ -22,8 +22,11 @@ ButtonCalendar has two modes, (A) self-windowed and (B) framed:
 
     (B) use an element within an existing PySimpleGUI window by assigning 
         button_calendar_object = ButtonCalendar().get_frame()
-        and adding button_calendar_object to the window's layout
-        *NOTE: You must call post_finalize() AFTER the window is read or finalized, and/or BEFORE the window's event loop to enable full functionality.
+        and adding button_calendar_object to the window's layout*
+        
+        *NOTE: You must call button_calendar_object.post_finalize() 
+            AFTER the window is read or finalized, 
+            and/or BEFORE the window's event loop to enable full functionality.
     
 # SELECTED DATES:
 
