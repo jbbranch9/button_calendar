@@ -27,6 +27,16 @@ ButtonCalendar has two modes, (A) self-windowed and (B) framed:
         and adding button_calendar_object to the window's layout
         *NOTE: You must call post_finalize() AFTER the window is read or finalized, and/or BEFORE the window's event loop to enable full functionality.
     
+# SELECTED DATES:
+
+Calling button_calendar_object.get_selected_dates() will return an array of the 
+currently selected dates formatted as ("YYYY-MM-DD", "YYYY-MM-DD", etc.)
+This list can also be printed by casting the ButtonCalendar as a string.
+In other words, print(button_calendar_object)* will print the selected dates as a string.
+
+* or "ctrl-P" while in self-windowed mode
+
+
 # CONTROLS:
 
 while mouse is hovering over calendar:
@@ -44,11 +54,13 @@ while NOT in 'range selection mode':
 
 while in 'range selection mode':
 
-    left-click OR
+    left-click  
+        -or-
     right-click:
         select all highlighted dates up to and including clicked date, exit 'range selection mode'
 
-    ctrl-right-click OR
+    ctrl-right-click  
+        -or-
     shift-right-click:
         de-select all highlighted dates up to and including clicked date, exit 'range selection mode'
         
