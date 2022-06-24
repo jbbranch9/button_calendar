@@ -1,19 +1,31 @@
 # button_calendar
 a PySimpleGUI calendar widget
 
+# OVERVIEW:
 
+ButtonCalendar is a monthly calendar widget, with toggle buttons for each date.
 
-ButtonCalendar is a monthly calendar widget, with buttons for each date.
-Each calendar spans 6 weeks of dates, which are centered around a particular month and year.
-Buttons along the top can be used to change the selected month and year.
-These month/year buttons will also refresh the text (but not the key) of each button to reflect the new dates.
+# FEATURES
 
-Date Buttons are 'toggle-style', meaning they change color when clicked,
-    and also add or remove their date string to this calendar's 'selected_dates' array.
-To the side of the row of dates is a Week Button, which toggles all Date Buttons in its same row.
-ButtonCalendar can be used either as an element within an existing PySimpleGUI window by using self.frame
-    *(must call post_finalize() before event loop to get full functionality),
-    or as a standalone widget by calling window()
+Each calendar screen spans 6 weeks, centered around the relevant month and year.
+
+DateButtons change color when toggled, and also add or remove their date string to the calendar's 'selected_dates' array.
+
+WeekButtons on the side can toggle all DateButtons in its same row.
+
+# APPLICATION:
+
+ButtonCalendar either can be:
+
+    instantiated as a standalone window by calling 
+        ButtonCalendar().window()
+    
+    -OR- 
+
+    used an element within an existing PySimpleGUI window by assigning 
+        button_calendar_object = ButtonCalendar().get_frame()
+    and adding button_calendar_object to the window's layout
+        *NOTE: You must call post_finalize() AFTER the window is read or finalized, and/or BEFORE the window's event loop to enable full functionality
     
 # CONTROLS:
 
