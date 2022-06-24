@@ -1,13 +1,11 @@
 # ButtonCalendar
-a PySimpleGUI calendar widget
-
-# OVERVIEW:
-
-ButtonCalendar is a monthly calendar widget, with toggle buttons for each date.
+a PySimpleGUI calendar widget with toggle buttons for each date.
 
 # FEATURES
 
 Each calendar screen spans 6 weeks, centered around the relevant month and year.
+
+Multiple dates can be toggled. A tuple of toggled dates can be called/printed at any time. (see "SELECTED DATES")
 
 DateButtons change color when toggled, and also add or remove their date string to the calendar's 'selected_dates' array.
 
@@ -35,6 +33,7 @@ This list can also be printed by casting the ButtonCalendar as a string.
 In other words, print(button_calendar_object)* will print the selected dates as a string.
 
 * or "ctrl-P" while in self-windowed mode
+** ButtonCalendar().window() also returns the selected dates when the window is closed.
 
 
 # CONTROLS:
