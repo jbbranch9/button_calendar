@@ -277,6 +277,10 @@ class ButtonCalendar:
         
         self.post_finalize()
 
+        self.window.bind("<Control-p>", '_print_')
+        self.window.bind("<Control-P>", '_print_')
+
+        ## BEGIN EVENT LOOP ##
         while True:
             event, values = window.read()
 ##            print('Event: ', event)
@@ -284,10 +288,15 @@ class ButtonCalendar:
             if event in exit_events:
                 break
 
+            if event == '_print_':
+                print(self)
+                continue # skip self.handle_event()
+
             self.handle_event(event, window)
 
 ##            print('Selected Dates: ', self.get_selected_dates())
         window.close()
+        ## END EVENT LOOP ##
         return self.get_selected_dates()
 
     # export copy of self.selected_dates
