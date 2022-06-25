@@ -41,9 +41,9 @@ class ButtonCalendar:
 
     def font(style="label_small"):
         fonts = {
-            "label": ("consolas bold", 13),
-            "label_small": ("consolas", 11),
-            "calendar_button": ("consolas bold", 16),
+            "label": ("consolas bold", 8),
+            "label_small": ("consolas", 6),
+            "calendar_button": ("consolas bold", 10),
         }
         if style:
             return fonts[style]
@@ -80,10 +80,14 @@ class ButtonCalendar:
     def today():
         return datetime.datetime.today().strftime("%Y-%m-%d")
 
-    def __init__(self, yyyy_mm_dd:str= None):
+    def __init__(self, yyyy_mm_dd:str= None, *args, **kwargs):
         if not yyyy_mm_dd:
             yyyy_mm_dd = ButtonCalendar.today()
         self.year, self.month, self.date = yyyy_mm_dd.split('-')
+
+        hide_frame = False
+        if 'hide_frame' in kwargs.keys():
+            hide_frame = kwargs['hide_frame']
         
         self.year = int(self.year)
         self.month = int(self.month)
@@ -171,7 +175,7 @@ class ButtonCalendar:
                 col,
                 element_justification='center',
                 pad=(0, 0),
-                vertical_alignment='bottom',
+                vertical_alignment='top',
             )
             frame_layout[0].append(new_column)
 
@@ -183,17 +187,16 @@ class ButtonCalendar:
             add_week_layout,
             element_justification='center',
             pad=(2, 0),
-            vertical_alignment='bottom',
+            vertical_alignment='top',
         )
 
         frame_layout[0].append(add_week_column)
 
         spacer_frame = gui.Frame(
-            '', frame_layout, pad=(10, 0), relief='flat', vertical_alignment='bottom'
+            '', frame_layout, pad=(5, 0), relief='flat', vertical_alignment='top'
         )
         c0 = gui.Column(
             [
-                [gui.Text('', font=ButtonCalendar.font('label_small'))],
                 [
                     self.back_year_btn,
                     self.back_month_btn,
@@ -219,6 +222,7 @@ class ButtonCalendar:
             font=ButtonCalendar.font('label'),
             element_justification='center',
             key= '-calendar-frame-',
+            border_width= int(not hide_frame),
         )
         
         
