@@ -1,4 +1,4 @@
-# © 2021-2022 Jacob Branch
+# © 2021-2023 Jacob Branch
 # version 1.0.0
 
 import datetime
@@ -80,10 +80,32 @@ class ButtonCalendar:
     def today():
         return datetime.datetime.today().strftime("%Y-%m-%d")
 
-    def __init__(self, yyyy_mm_dd:str= None, *args, **kwargs):
-        if not yyyy_mm_dd:
+    def parse(yyyy_mm_dd:str):
+        return [int(date) for date in yyyy_mm_dd.split("-")]
+
+    def is_past(yyyy_mm_dd:str):
+        year, month, date = ButtonCalendar.parse(yyyy_mm_dd)
+        today_y, today_m, today_d = ButtonCalendar.parse(ButtonCalendar.today())
+        
+        past = False # assumption
+        if year < today_y or \
+           (year == today_y and month < today_m) or \
+           (year == today_y and month == today_m and date < today_d):
+
+            past = True
+
+        return past
+        
+
+    def __init__(self,\
+                 *args,
+                 **kwargs):
+        
+        if not "yyyy_mm_dd" in list(kwargs.keys()):
             yyyy_mm_dd = ButtonCalendar.today()
-        self.year, self.month, self.date = yyyy_mm_dd.split('-')
+        else:
+            yyyy_mm_dd = kwargs["yyyy_mm_dd"]
+        self.year, self.month, self.date = ButtonCalendar.parse(yyyy_mm_dd)
 
         hide_frame = False
         if 'hide_frame' in kwargs.keys():
@@ -207,11 +229,6 @@ class ButtonCalendar:
                 [spacer_frame],
             ],
             element_justification='center',
-##  metadata links are for debug only, not recommended for non-debug purposes
-##            metadata= {
-##                "ButtonCalendar_object": self,
-##                "ButtonCalendar_class": ButtonCalendar,
-##                }
         )
 
         self.layout = [[c0]]
@@ -232,31 +249,48 @@ class ButtonCalendar:
         self.bind_right_click_to_all_date_btns()
         self.select_today()
 
+        self.window.bind("<Control-p>", '_print_')
+        self.window.bind("<Control-P>", '_print_')
+
     def window(self):
 
         exit_events = (gui.WIN_CLOSED, 'Exit', 'Escape:27', 'F5:116')
 
+        event_is_type = lambda event, event_type: str(event_type) in event.split("::")
+
+
+        menu_def = [
+            ['&Tools', ['&Print::_print_', '&Save::_save_', '---', '&Preferences::_preferences_', 'E&xit']],
+
+            ]
+
+        self.menu = gui.Menu(menu_def)
+
+        lyt = [
+            [self.menu],
+            [self.frame],
+            ],
+
         self.window = window = gui.Window(
             'Button Calendar',
-            [[self.frame]],
+            layout= lyt,
             return_keyboard_events=True,
             finalize= True,
         )
         
         self.post_finalize()
 
-        self.window.bind("<Control-p>", '_print_')
-        self.window.bind("<Control-P>", '_print_')
-
         ## BEGIN EVENT LOOP ##
         while True:
             event, values = window.read()
-##            print('Event: ', event)
+            print('Event: ', event)
 
-            if event in exit_events:
-                break
 
-            if event == '_print_':
+            # exit app
+            if event in exit_events: break
+
+
+            if event_is_type(event, "_print_"):
                 print(self)
                 continue # skip self.handle_event()
 
@@ -304,17 +338,22 @@ class ButtonCalendar:
     # window-agnostic** handler for all events
     # **(i.e. it should be able to handle any events that originate inside or outside of the widget)
     def handle_event(self, event, window):
-        
+
+        ## EVENT PARSING ##
+
+        # toggle "mouse-over" events
         if event == '-calendar-frame-_mouse_enter_':
             self.mouse_over = True
         elif event == '-calendar-frame-_mouse_exit_':
             self.mouse_over = False
-        
+      
         # interpret mouse wheel as +/- month
         if event == 'MouseWheel:Up' and self.mouse_over == True:
             event = 'back_month'
         if event == 'MouseWheel:Down' and self.mouse_over == True:
             event = 'forward_month'
+
+        ## EVENT HANDLING ##
         
         # if back/forward month/year buttons are pressed, update month and year
         if event in ['back_year', 'back_month', 'forward_year', 'forward_month']:
@@ -521,6 +560,7 @@ class ButtonCalendar:
             btn.metadata = btn.new_metadata(new_date, self.month)
             btn.update(text=btn.name(new_date))
             btn.update(button_color=btn.get_button_color())
+            btn.update(disabled= ButtonCalendar.is_past(new_date))
 
         for btn in self.button_array:
             if btn.metadata['date'] in self.selected_dates:
@@ -535,7 +575,7 @@ class ButtonCalendar:
         btn = btns[ix]
         return btn
 
-    def build_date_list(self, year, month):
+    def build_date_list(self, year, month, date_format='%Y-%m-%d'):
         dates = []
 
         # start on the Sunday before the 1st of the month
@@ -544,7 +584,7 @@ class ButtonCalendar:
         for offset in range(42):
             dt += datetime.timedelta(days=1)
 
-            dates.append(dt.strftime('%Y-%m-%d'))
+            dates.append(dt.strftime(date_format))
 
         return dates
 
@@ -567,7 +607,11 @@ class ButtonCalendar:
             )
 
     class Date_Button(gui.Button):
-        def __init__(self, date, parent_calendar_month, ix, selected=False):
+        def __init__(self,
+                     date,
+                     parent_calendar_month,
+                     ix,
+                     selected=False):
 
             self.metadata = self.new_metadata(date, parent_calendar_month)
             
@@ -583,6 +627,7 @@ class ButtonCalendar:
                 metadata=self.metadata,
                 button_color=color,
                 font=ButtonCalendar.font('calendar_button'),
+                disabled= ButtonCalendar.is_past(date), # disable past dates
             )
 
         def new_metadata(self, date, parent_calendar_month):
